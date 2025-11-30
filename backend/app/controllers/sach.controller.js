@@ -72,9 +72,10 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
   try {
     const sachService = new SachService(MongoDB.client);
+
     const document = await sachService.findById(req.params.id);
 
-    if (!document) {
+    if (document === null) {
       return next(new ApiError(404, "Không tìm thấy sách"));
     }
 
@@ -240,7 +241,7 @@ exports.findAvailable = async (req, res, next) => {
 
 exports.search = async (req, res, next) => {
   const keyword = req.query.q?.trim();
-
+  console.log(keyword);
   if (!keyword) {
     return res.send({
       message: "Vui lòng nhập từ khóa tìm kiếm",
@@ -263,7 +264,6 @@ exports.search = async (req, res, next) => {
         { MaNXB: regex },
       ],
     });
-
     return res.send({
       message: documents.length
         ? "Tìm kiếm thành công"

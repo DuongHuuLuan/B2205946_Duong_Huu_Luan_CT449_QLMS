@@ -79,6 +79,7 @@ function goBack() {
 async function borrowBook() {
     if (stock.value === 0) return;
 
+    console.log(book.value._id)
     router.push({
         name: 'reader.checkout-book',
         params: { id: book.value._id }

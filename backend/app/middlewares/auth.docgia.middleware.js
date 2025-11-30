@@ -20,8 +20,11 @@ const verifyToken = (req, res, next) => {
 };
 
 const authorizeRoleDocGia = () => {
+  console.log("MIDDLE");
   return (req, res, next) => {
+    console.log(req.user);
     if (!req.user) {
+      console.log("CCCC");
       return res
         .status(403)
         .json({ message: "Truy cập bị từ chối. (Yêu cầu Độc giả)" });

@@ -1,5 +1,3 @@
-// src/services/thongke.service.js
-
 import createApiClient from "./api.service";
 
 const baseURL = "/api/thongke";

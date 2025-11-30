@@ -472,6 +472,7 @@ exports.findByDocGia = async (req, res, next) => {
 // Độc giả tự mượn sách
 exports.createByDocGia = async (req, res, next) => {
   try {
+    console.log("CONTROLLEr");
     const MaDocGia = req.user.MaDocGia;
     const { ChiTietMuon, TongTien, NgayMuon, HanTra } = req.body;
 

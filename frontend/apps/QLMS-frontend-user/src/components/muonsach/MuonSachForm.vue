@@ -95,8 +95,9 @@ onMounted(async () => {
     try {
         const id = route.params.id;
         if (!id) throw new Error("Không có ID sách");
+        console.log(id)
         const bookData = await SachService.getById(id);
-
+        console.log("GET NGU")
         if (!bookData || bookData.SoQuyen === undefined) {
             console.warn("Dữ liệu sách thiếu trường SoQuyen!");
         }
@@ -116,6 +117,7 @@ onMounted(async () => {
 });
 
 async function confirmBorrow() {
+    console.log("1123123s")
     isSubmitting.value = true;
     try {
         if (quantity.value <= 0) {
@@ -142,6 +144,8 @@ async function confirmBorrow() {
             TongTien: totalCostNumeric.value,
         };
 
+        console.log("MUON SACHS")
+
         await TheoDoiMuonSachService.createByDocGia(data);
 
         await Swal.fire({
@@ -162,7 +166,7 @@ async function confirmBorrow() {
 }
 </script>
 
----
+
 
 <style scoped>
 .checkout-container {

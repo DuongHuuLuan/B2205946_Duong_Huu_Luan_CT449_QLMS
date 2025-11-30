@@ -29,20 +29,19 @@ export const useBookStore = defineStore("bookStore", {
 
     async searchBooks(keyword) {
       if (!keyword || keyword.trim() === "") {
+        // console.log(1);
         return await this.fetchAvailableBooks();
       }
-
+      console.log(2);
       this.loading = true;
       this.error = null;
       try {
         const data = await SachService.search(keyword.trim());
-        console.log("Kết quả tìm kiếm:", data);
-
         this.books = Array.isArray(data)
           ? data
           : data?.books || data?.data || data?.results || [];
       } catch (error) {
-        console.error("Lỗi tìm kiếm sách:", error);
+        console.log("SDY" + error);
         this.error = "Không tìm thấy sách nào phù hợp.";
         this.books = [];
       } finally {

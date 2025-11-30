@@ -10,7 +10,7 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, title: "Trang chủ" },
   },
   {
     path: "/login",
@@ -28,31 +28,31 @@ const routes = [
     path: "/sach",
     name: "sach.list",
     component: () => import("@/views/readers/ReaderHome.vue"),
-    meta: { requiresAuth: true, role: "docgia" },
+    meta: { requiresAuth: true, role: "docgia", title: "Tất cả sách" },
   },
   {
     path: "/reader/books/:id",
     name: "reader.book-detail",
     component: () => import("@/views/readers/BookDetailView.vue"),
-    meta: { requiresAuth: true, role: "docgia" },
+    meta: { requiresAuth: true, role: "docgia", title: "Chi tiết sách" },
   },
   {
     path: "/reader/checkout/:id",
     name: "reader.checkout-book",
     component: () => import("@/views/muonsach/MuonSachAdd.vue"),
-    meta: { requiresAuth: true, role: "docgia" },
+    meta: { requiresAuth: true, role: "docgia", title: "Mượn sách" },
   },
   {
     path: "/reader/borrowed",
     name: "borrowed.list",
     component: () => import("@/views/muonsach/MuonSachList.vue"),
-    meta: { requiresAuth: true, role: "docgia" },
+    meta: { requiresAuth: true, role: "docgia", title: "Danh Sách mượn" },
   },
   {
     path: "/docgia/profile",
     name: "docgia.profile",
     component: () => import("@/views/docgia/ProfileView.vue"),
-    meta: { requiresAuth: true, role: "docgia" },
+    meta: { requiresAuth: true, role: "docgia", title: "Trang cá nhân" },
   },
   {
     path: "/:pathMatch(.*)*",
@@ -97,6 +97,14 @@ router.beforeEach((to, from, next) => {
   }
 
   return next();
+});
+
+router.afterEach((to) => {
+  if (to.meta && to.meta.title) {
+    document.title = `${to.meta.title}`;
+  } else {
+    document.title = "Thư viện Online"; // fallback
+  }
 });
 
 export default router;

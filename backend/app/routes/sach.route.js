@@ -50,6 +50,13 @@ const uploadBiaSach = multer({
 // ROUTE CHO ĐỘC GIẢ (Chỉ xem)
 // ----------------------------------------------------------------------
 
+router.get(
+  "/search/book",
+  verifyTokenDocGia,
+  authorizeRoleDocGia(),
+  sachController.search
+);
+
 // GET /api/sach/available (Tìm sách có sẵn)
 router.get(
   "/available",
@@ -58,14 +65,12 @@ router.get(
   sachController.findAvailable
 );
 
-// GET /api/sach/:id (Xem chi tiết sách)
 router.get(
   "/:id",
   verifyTokenDocGia, // Sử dụng verifyToken của Độc giả
   authorizeRoleDocGia(), // Ủy quyền chỉ cho Độc giả
   sachController.findOne
 );
-
 // ----------------------------------------------------------------------
 // ROUTE CHO NHÂN VIÊN (Xem, Thêm, Sửa, Xóa)
 router
@@ -100,12 +105,5 @@ router
     authorizeRoleNhanVien(["Admin"]),
     sachController.delete
   );
-
-router.get(
-  "/search",
-  verifyTokenDocGia,
-  authorizeRoleDocGia(),
-  sachController.search
-);
 
 module.exports = router;

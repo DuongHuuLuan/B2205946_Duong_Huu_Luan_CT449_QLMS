@@ -12,7 +12,7 @@
                 </p>
 
                 <div class="search-box">
-                    <input type="text" placeholder="Tìm kiếm sách, tác giả, ISBN..." class="search-input"
+                    <input type="text" placeholder="Tìm kiếm sách, tác giả,..." class="search-input"
                         v-model="searchQuery" @keyup.enter="performSearch" />
                     <button class="search-btn" @click="performSearch">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -10,10 +10,8 @@ class SachService {
   }
 
   async search(keyword) {
-    const response = await api.get(
-      `/sach/search?q=${encodeURIComponent(keyword)}`
-    );
-    return response.data.data;
+    const response = await api.get(`/sach/search/book?q=${keyword}`);
+    return response.data;
   }
 }
 
