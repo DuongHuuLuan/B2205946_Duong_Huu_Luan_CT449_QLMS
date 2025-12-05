@@ -3,8 +3,11 @@ const jwt = require("jsonwebtoken");
 const MongoDB = require("../utils/mongodb.util");
 const NhanVienService = require("../services/nhanvien.service");
 const ApiError = require("../api-error");
+const config = require("../config");
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret123";
+const JWT_SECRET = config.jwt.secret;
+
+// const JWT_SECRET = process.env.JWT_SECRET || "secret123";
 
 exports.register = async (req, res, next) => {
   try {

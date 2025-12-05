@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 
 const uploadAvatar = multer({
   storage,
-  limits: { fileSize: 3 * 1024 * 1024 }, // 3MB
+  limits: { fileSize: 3 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const filetypes = /jpeg|jpg|png|webp/;
     const extname = filetypes.test(
@@ -33,7 +33,6 @@ const uploadAvatar = multer({
     cb(new Error("Chỉ chấp nhận file ảnh (jpg, png, webp)"));
   },
 });
-// Lấy danh sách nhân viên -> chỉ Admin và Quản lý được quyền xem
 router.get(
   "/",
   verifyToken,
@@ -65,7 +64,6 @@ router.put(
   nhanvien.update
 );
 
-// Xóa nhân viên -> chỉ Admin
 router.delete("/:id", verifyToken, authorizeRole(["Admin"]), nhanvien.delete);
 
 module.exports = router;
