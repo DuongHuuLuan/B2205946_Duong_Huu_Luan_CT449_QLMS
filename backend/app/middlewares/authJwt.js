@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
 const ApiError = require("../api-error");
+const config = require("../config");
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret123";
+const JWT_SECRET = config.jwt.secret;
+
+// const JWT_SECRET = process.env.JWT_SECRET || "secret123";
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>

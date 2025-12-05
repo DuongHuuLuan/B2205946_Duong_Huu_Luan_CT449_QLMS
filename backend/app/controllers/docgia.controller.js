@@ -4,8 +4,8 @@ const MongoDB = require("../utils/mongodb.util");
 const { ObjectId } = require("mongodb");
 
 /**
- * @param {Object} req - Request object
- * @param {boolean} withFile - True nếu request có upload file (đã qua Multer)
+ * @param {Object} req
+ * @param {boolean} withFile
  */
 const createDocGia = async (req, res, next, withFile = false) => {
   if (!req.body?.Ten) return next(new ApiError(400, "Tên không được trống"));
@@ -137,7 +137,7 @@ exports.update = async (req, res, next) => {
 
       const checkPayload = { ...req.body };
       delete checkPayload.MaDocGia;
-      delete checkPayload.Password; // password thường bị xử lý riêng, bỏ qua khi so sánh
+      delete checkPayload.Password;
 
       if (payload.Avatar) {
         checkPayload.Avatar = payload.Avatar;
