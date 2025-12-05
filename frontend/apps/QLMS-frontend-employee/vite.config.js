@@ -1,10 +1,7 @@
 import { fileURLToPath, URL } from "node:url";
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
-
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
   resolve: {
@@ -18,8 +15,8 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "http://localhost:3000/",
-        changeOrigin: true, // BẮT BUỘC PHẢI CÓ
-        rewrite: (path) => path.replace(/^\/api/, "/api"), // giữ nguyên /api
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
         secure: false,
       },
       "/uploads": {

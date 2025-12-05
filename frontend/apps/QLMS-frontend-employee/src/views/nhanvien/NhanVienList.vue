@@ -95,7 +95,6 @@ export default {
         }
     },
     methods: {
-        // METHOD MỚI: Lấy chữ cái đầu
         getInitial(nhanVien) {
             return (nhanVien.HoTenNV || nhanVien.MSNV || "?").charAt(0).toUpperCase();
         },
@@ -103,7 +102,6 @@ export default {
         async loadNhanVien() {
             try {
                 const res = await NhanVienService.getAll();
-                // support both axios style (res.data) and direct array
                 this.nhanVienList = res?.data ?? res ?? [];
             } catch (error) {
                 Swal.fire({
@@ -140,9 +138,7 @@ export default {
         },
 
         onSearch() {
-            // gọi khi nhấn Enter hoặc click nút tìm — hiện chỉ log
             console.log("Tìm nhân viên:", this.searchKeyword);
-            // nếu muốn search server-side, gọi API ở đây và cập nhật nhanVienList
         },
     },
     created() {
@@ -151,7 +147,6 @@ export default {
 };
 </script>
 <style scoped>
-/* MÀU CHỦ ĐẠO XANH DƯƠNG */
 .nhanvien-table .avatar-col {
     width: 60px;
     text-align: center;
@@ -188,7 +183,6 @@ export default {
     justify-content: center;
 }
 
-/* Nút Thêm mới + Sửa */
 .btn-success,
 .btn-warning {
     background-color: #0d6efd !important;

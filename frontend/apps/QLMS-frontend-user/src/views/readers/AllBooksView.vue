@@ -5,7 +5,6 @@
                 {{ searchKeyword ? `Kết quả tìm kiếm: "${searchKeyword}"` : "Tất Cả Sách Trong Thư Viện" }}
             </h1>
 
-            <!-- Danh sách sách (đã phân trang) -->
             <div class="books-list" v-if="paginatedBooks.length">
                 <BookCardHorizontal v-for="book in paginatedBooks" :key="book._id" :book="book"
                     @click="goToDetail(book)" />
@@ -17,7 +16,6 @@
                 <p v-else>Chưa có sách nào trong thư viện.</p>
             </div>
 
-            <!-- Phân trang -->
             <div class="pagination" v-if="totalPages > 1">
                 <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1" class="page-btn">
                     ‹ Trước
@@ -48,9 +46,8 @@ const bookStore = useBookStore();
 
 const searchKeyword = ref("");
 const currentPage = ref(1);
-const pageSize = 10;   // Bạn có thể đổi thành 10, 20 tùy thích
+const pageSize = 10;
 
-// Phân trang
 const paginatedBooks = computed(() => {
     const start = (currentPage.value - 1) * pageSize;
     const end = start + pageSize;
@@ -61,7 +58,6 @@ const totalPages = computed(() => {
     return Math.ceil(bookStore.books.length / pageSize);
 });
 
-// Hiển thị tối đa 7 nút số (ví dụ: 1 2 3 ... 10 11 12)
 const visiblePages = computed(() => {
     const pages = [];
     const maxVisible = 7;
@@ -86,7 +82,6 @@ async function performSearch() {
     } else {
         await bookStore.fetchAvailableBooks();
     }
-    // Reset về trang 1 mỗi khi tìm kiếm mới
     currentPage.value = 1;
 }
 
@@ -150,7 +145,6 @@ function goToDetail(book) {
     padding: 0 1.5rem;
 }
 
-/* ==== PHÂN TRANG ==== */
 .pagination {
     display: flex;
     justify-content: center;

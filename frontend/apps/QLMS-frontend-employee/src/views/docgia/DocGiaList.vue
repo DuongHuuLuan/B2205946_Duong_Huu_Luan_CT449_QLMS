@@ -94,7 +94,6 @@ export default {
         }
     },
     methods: {
-        // METHOD MỚI: Lấy chữ cái đầu
         getInitial(docGia) {
             return (docGia.Ten || docGia.MaDocGia || "?").charAt(0).toUpperCase();
         },
@@ -106,10 +105,8 @@ export default {
         },
 
         async loadDocGia() {
-            // ... (Giữ nguyên logic loadDocGia)
             try {
                 const res = await DocGiaService.getAll();
-                // Giả sử API trả về list
                 this.docGiaList = res?.data ?? res ?? [];
             } catch (error) {
                 Swal.fire({
@@ -121,7 +118,6 @@ export default {
             }
         },
         async deleteDocGia(id) {
-            // ... (Giữ nguyên logic deleteDocGia)
             const result = await Swal.fire({
                 title: 'Xác nhận xóa?',
                 text: "Bạn có chắc muốn xóa Độc Giả này? Hành động này không thể hoàn tác!",
@@ -159,16 +155,12 @@ export default {
 };
 </script>
 <style scoped>
-/* Định nghĩa chiều rộng cột Avatar */
 .docgia-table .avatar-col {
     width: 70px;
-    /* Chiều rộng cố định cho cột */
     text-align: center;
     padding: 8px 5px;
-    /* Giảm padding ngang nếu cần */
 }
 
-/* Wrapper để căn giữa và định dạng hình tròn */
 .list-avatar-wrapper {
     width: 50px;
     height: 50px;
@@ -178,18 +170,15 @@ export default {
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    /* Căn giữa trong ô bảng */
     border: 1px solid #e0e0e0;
 }
 
-/* Style cho ảnh thực tế */
 .list-avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Style cho Avatar mặc định (chữ cái đầu) */
 .list-avatar-default {
     width: 100%;
     height: 100%;
@@ -197,14 +186,11 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: #e6e6fa;
-    /* Light Lavender */
     color: #4b0082;
-    /* Indigo/Purple text */
     font-size: 16px;
     font-weight: 600;
 }
 
-/* Căn chỉnh lại các cột trong bảng nếu cần */
 .docgia-table th,
 .docgia-table td {
     vertical-align: middle;

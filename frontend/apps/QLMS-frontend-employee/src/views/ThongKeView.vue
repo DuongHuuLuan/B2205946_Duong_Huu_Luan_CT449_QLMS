@@ -81,21 +81,15 @@ export default {
         async fetchStats() {
             this.isLoading = true;
             try {
-                // Lấy dữ liệu thống kê chung
                 this.generalStats = await ThongKeService.getGeneralStats();
-
-                // Lấy dữ liệu cho biểu đồ
                 this.publisherStats = await ThongKeService.getBooksByPublisher();
                 this.staffStats = await ThongKeService.getStaffByRole();
-                // lấy top sách
                 this.topBorrowedBooks = await ThongKeService.getTopBorrowedBooks();
-                // Ở đây bạn sẽ gọi hàm xử lý dữ liệu cho biểu đồ
                 if (this.publisherStats.length) this.processPublisherData();
                 if (this.staffStats.length) this.processStaffData();
 
             } catch (error) {
                 console.error("Lỗi khi tải dữ liệu thống kê:", error);
-                // Hiển thị thông báo lỗi cho người dùng (ví dụ: dùng toast)
             } finally {
                 this.isLoading = false;
             }

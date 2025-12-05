@@ -6,7 +6,6 @@
                     Cập Nhật Nhân Viên
                 </h2>
 
-                <!-- Form chỉ hiện khi đã load xong dữ liệu -->
                 <NhanVienForm v-if="nhanVien" :nhanVien="nhanVien" @submit:nhanvien="updateNhanVien"
                     @submit:nhanvien-with-file="updateNhanVienWithFile" />
 
@@ -34,7 +33,6 @@ export default {
         };
     },
     methods: {
-        // Load dữ liệu nhân viên khi vào trang
         async loadNhanVien() {
             try {
                 this.nhanVien = await NhanVienService.getById(this.$route.params.id);
@@ -48,7 +46,6 @@ export default {
             }
         },
 
-        // Cập nhật KHÔNG có ảnh mới
         async updateNhanVien(data) {
             try {
                 await NhanVienService.updateWithAvatar(this.nhanVien._id, data, null);
@@ -58,7 +55,6 @@ export default {
             }
         },
 
-        // Cập nhật CÓ ảnh mới
         async updateNhanVienWithFile({ nhanVien, file }) {
             try {
                 await NhanVienService.updateWithAvatar(this.nhanVien._id, nhanVien, file);
@@ -68,7 +64,6 @@ export default {
             }
         },
 
-        // Alert thành công
         showSuccess(message) {
             Swal.fire({
                 icon: "success",
@@ -81,7 +76,6 @@ export default {
             });
         },
 
-        // Alert lỗi
         showError(error) {
             const msg = error?.response?.data?.message || "Cập nhật thất bại. Vui lòng thử lại!";
             Swal.fire({
@@ -99,7 +93,6 @@ export default {
 </script>
 
 <style scoped>
-/* Làm đẹp thêm chút */
 .text-primary {
     color: #0d6efd !important;
 }

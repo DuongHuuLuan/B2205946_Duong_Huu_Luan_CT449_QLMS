@@ -11,10 +11,9 @@ class NhaXuatBanService {
 
   async getAll() {
     const res = await this.api.get("/");
-    // đảm bảo mỗi NXB đều có bookCount
     return res.data.map((nxb) => ({
       ...nxb,
-      bookCount: nxb.bookCount ?? 0, // fallback 0 nếu backend chưa trả
+      bookCount: nxb.bookCount ?? 0,
     }));
   }
 

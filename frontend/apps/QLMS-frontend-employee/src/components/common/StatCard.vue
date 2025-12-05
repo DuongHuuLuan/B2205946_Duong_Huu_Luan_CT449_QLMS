@@ -18,28 +18,24 @@ export default {
             required: true,
         },
         value: {
-            type: [Number, String], // Chấp nhận cả số và chuỗi
+            type: [Number, String],
             required: true,
             default: 0,
         },
-        // Prop để xác định màu nền (ví dụ: 'bg-primary', 'bg-success')
         color: {
             type: String,
             default: 'bg-light',
         },
     },
-    // Bạn có thể thêm methods để format số ở đây nếu cần (ví dụ: 10000 -> 10,000)
 };
 </script>
 
 <style scoped>
 .stat-card {
     color: white;
-    /* Đảm bảo chữ trắng trên nền màu */
     border: none;
     transition: transform 0.2s;
     min-height: 120px;
-    /* Đảm bảo chiều cao đồng nhất */
 }
 
 .stat-card:hover {
@@ -57,7 +53,6 @@ export default {
     font-size: 1.8rem;
 }
 
-/* Các lớp màu Bootstrap cơ bản (Nếu bạn đang dùng Bootstrap) */
 .bg-primary {
     background-color: #007bff !important;
 }

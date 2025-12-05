@@ -1,6 +1,5 @@
 <template>
     <form @submit.prevent="submitNhanVien" class="row g-3">
-        <!-- AVATAR -->
         <div class="col-12 text-center mb-4">
             <label class="form-label fw-bold text-success">Avatar Nhân Viên</label>
             <div class="avatar-preview-wrapper mx-auto">
@@ -14,7 +13,6 @@
             <small class="text-muted">Tối đa 3MB, định dạng JPG/PNG</small>
         </div>
 
-        <!-- FORM FIELDS -->
         <div class="col-md-6">
             <label>MSNV <span class="text-danger">*</span></label>
             <input v-model="nhanVienLocal.MSNV" class="form-control" required />
@@ -85,7 +83,6 @@ export default {
                 this.nhanVienLocal = newVal ? { ...newVal } : {};
                 this.previewUrl = this.nhanVienLocal.Avatar || null;
                 this.newAvatarFile = null;
-                // Reset password khi edit
                 if (this.nhanVienLocal._id) {
                     this.nhanVienLocal.Password = "";
                 }
@@ -114,7 +111,7 @@ export default {
         },
         submitNhanVien() {
             const cleanData = { ...this.nhanVienLocal };
-            delete cleanData.Avatar; // không gửi data URL
+            delete cleanData.Avatar;
 
             if (this.newAvatarFile) {
                 this.$emit("submit:nhanvien-with-file", {
@@ -130,7 +127,6 @@ export default {
 </script>
 
 <style scoped>
-/* MÀU CHỦ ĐẠO: XANH DƯƠNG (giống Độc Giả & Sách) */
 :root {
     --primary: #0d6efd;
     --primary-light: #cfe2ff;
@@ -153,12 +149,10 @@ export default {
     object-fit: cover;
 }
 
-/* Avatar mặc định khi chưa có ảnh */
 .bg-primary-custom {
     background: linear-gradient(135deg, #0d6efd, #0b5ed7) !important;
 }
 
-/* Form đẹp hơn */
 .form-control:focus,
 .form-select:focus {
     border-color: var(--primary);

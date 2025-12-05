@@ -19,7 +19,6 @@ class ThongKeService {
     return (await this.api.get("/staff-by-role")).data;
   }
 
-  // Nếu bạn có triển khai Top Sách Mượn:
   async getTopBorrowedBooks() {
     return (await this.api.get("/top-borrowed")).data;
   }

@@ -2,7 +2,6 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4">
-                <!-- Gọi component LoginForm -->
                 <LoginForm />
             </div>
         </div>

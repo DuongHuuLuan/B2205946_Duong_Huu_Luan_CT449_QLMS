@@ -13,7 +13,6 @@ class SachService {
     return (await this.api.get(`/${id}`)).data;
   }
 
-  // DÙNG CHUNG 1 ROUTE POST / với multer → KHÔNG CẦN /with-cover
   async createWithCover(sachObj, file = null) {
     const fd = new FormData();
     Object.entries(sachObj).forEach(([k, v]) => {

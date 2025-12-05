@@ -11,7 +11,6 @@ class DocGiaService {
 
   async createWithAvatar(docGiaObj, file) {
     const fd = new FormData();
-    // docGiaObj là object trường dữ liệu (MaDocGia, Ten, ...)
     Object.keys(docGiaObj).forEach((k) => {
       if (docGiaObj[k] !== undefined && docGiaObj[k] !== null) {
         fd.append(k, docGiaObj[k]);
@@ -19,12 +18,10 @@ class DocGiaService {
     });
     if (file) fd.append("Avatar", file);
 
-    // IMPORTANT: không set Content-Type ở đây
     const res = await this.api.post("/with-avatar", fd);
     return res.data;
   }
 
-  // Update with file -> PUT /:id (backend của bạn có uploadAvatar.single('Avatar') cho PUT /:id)
   async updateWithAvatar(id, docGiaObj, file) {
     const fd = new FormData();
     Object.keys(docGiaObj).forEach((k) => {
@@ -40,10 +37,9 @@ class DocGiaService {
 
   async getAll() {
     const res = await this.api.get("/");
-    // Đảm bảo có trường hasBorrowed để UI dùng check disable nút xóa
     return res.data.map((dg) => ({
       ...dg,
-      hasBorrowed: dg.hasBorrowed ?? false, // fallback false nếu backend chưa gửi
+      hasBorrowed: dg.hasBorrowed ?? false,
     }));
   }
 

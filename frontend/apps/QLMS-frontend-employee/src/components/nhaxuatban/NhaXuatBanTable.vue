@@ -49,7 +49,6 @@ export default {
     emits: ["delete"],
     methods: {
         handleDelete(id) {
-            // Khi xóa, luôn dùng _id vì đó là khóa chính MongoDB
             this.$emit("delete", id);
         },
     },

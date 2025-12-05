@@ -1,4 +1,3 @@
-<!-- File: src/views/nhaxuatban/NhaXuatBanList.vue -->
 <template>
     <div class="container mt-4">
         <h2 class="mb-3">Danh sách Nhà Xuất Bản</h2>
@@ -8,7 +7,6 @@
                 Thêm Nhà Xuất Bản
             </router-link>
         </div>
-        <!-- Search component -->
         <div class="mb-3">
             <InputSearch v-model="searchKeyword" @submit="onSearch" />
         </div>
@@ -54,7 +52,6 @@ export default {
         async loadNXB() {
             try {
                 const data = await NhaXuatBanService.getAll();
-                // support both axios-style and direct returns
                 this.nxbList = data?.data ?? data ?? [];
             } catch (error) {
                 Swal.fire({
@@ -99,7 +96,6 @@ export default {
         },
 
         onSearch() {
-            // hiện chỉ log; nếu muốn tìm server-side, gọi API ở đây
             console.log("Tìm Nhà Xuất Bản:", this.searchKeyword);
         },
     },

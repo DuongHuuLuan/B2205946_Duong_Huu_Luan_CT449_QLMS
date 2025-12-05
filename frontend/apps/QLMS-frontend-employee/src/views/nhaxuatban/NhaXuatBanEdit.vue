@@ -1,4 +1,3 @@
-// File: src/views/nhaxuatban/NhaXuatBanEdit.vue
 <template>
     <div class="container mt-4">
         <h2 class="mb-3">Cập Nhật Nhà Xuất Bản</h2>
@@ -10,7 +9,7 @@
 <script>
 import NhaXuatBanForm from '@/components/nhaxuatban/NhaXuatBanForm.vue';
 import NhaXuatBanService from '@/services/nhaxuatban.service';
-import Swal from "sweetalert2"; // 👈 Import SweetAlert2
+import Swal from "sweetalert2";
 
 export default {
     name: "NhaXuatBanEdit",
@@ -18,17 +17,14 @@ export default {
     data() {
         return {
             nxb: null,
-            // Xóa errorMessage và successMessage
         };
     },
     methods: {
         async loadNXB() {
             try {
                 const id = this.$route.params.id;
-                // Giả định service.get(id) trả về nxb object
                 this.nxb = await NhaXuatBanService.get(id);
             } catch (error) {
-                // Thay thế errorMessage bằng Swal.fire
                 Swal.fire({
                     icon: 'error',
                     title: 'Lỗi!',
@@ -41,7 +37,6 @@ export default {
             try {
                 await NhaXuatBanService.update(this.$route.params.id, updatedNXB);
 
-                // Thay thế successMessage bằng Swal.fire
                 Swal.fire({
                     icon: 'success',
                     title: 'Thành công!',

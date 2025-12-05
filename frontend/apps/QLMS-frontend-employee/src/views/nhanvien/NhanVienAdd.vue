@@ -13,13 +13,11 @@ import Swal from "sweetalert2";
 export default {
     components: { NhanVienForm },
     methods: {
-        // Không có ảnh
         async addNhanVien(data) {
             await NhanVienService.createWithAvatar(data, null);
             Swal.fire("Thành công!", "Thêm nhân viên thành công", "success");
             this.$router.push({ name: "nhanvien.list" });
         },
-        // Có ảnh
         async addNhanVienWithFile({ nhanVien, file }) {
             await NhanVienService.createWithAvatar(nhanVien, file);
             Swal.fire("Thành công!", "Thêm nhân viên + avatar thành công", "success");

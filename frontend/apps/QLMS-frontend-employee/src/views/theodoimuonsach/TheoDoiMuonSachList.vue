@@ -6,7 +6,6 @@
             Thêm Theo Dõi
         </router-link>
 
-        <!-- Search component -->
         <div class="mb-3">
             <InputSearch v-model="searchKeyword" @submit="onSearch" />
         </div>
@@ -25,7 +24,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- use displayedList (filtered) -->
                 <tr v-for="td in displayedList" :key="td._id">
                     <td>{{ td.MaDocGia }}</td>
 
@@ -80,7 +78,7 @@ import Swal from "sweetalert2";
 export default {
     name: "TheoDoiMuonSachList",
     components: {
-        InputSearch, // <-- đăng ký component ở đây
+        InputSearch,
     },
     data() {
         return {
@@ -96,12 +94,10 @@ export default {
     },
 
     computed: {
-        // danh sách hiển thị sau khi lọc theo searchKeyword
         displayedList() {
             const kw = String(this.searchKeyword || "").trim().toLowerCase();
             if (!kw) return this.tdList;
 
-            // lọc theo MaDocGia hoặc MaSach trong ChiTietMuon
             return this.tdList.filter(td => {
                 if ((td.MaDocGia || "").toString().toLowerCase().includes(kw)) return true;
 
@@ -120,7 +116,6 @@ export default {
             return new Date(date).toLocaleDateString("vi-VN");
         },
 
-        // Hiển thị Mã Sách (giữ đơn giản)
         getSachInfo(maSach) {
             return maSach;
         },
@@ -194,9 +189,6 @@ export default {
         },
 
         onSearch() {
-            // onSearch có thể dùng để trigger hành động khi nhấn nút Tìm Kiếm,
-            // nhưng hiện chúng ta đã lọc realtime bằng computed displayedList.
-            // Vẫn giữ log để debug.
             console.log("Đang tìm:", this.searchKeyword);
         },
     },

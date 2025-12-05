@@ -104,7 +104,6 @@ export default {
         async loadSach() {
             try {
                 const res = await SachService.getAll();
-                // handle cases where API returns data directly or inside .data
                 this.sachList = res?.data ?? res ?? [];
             } catch (error) {
                 this.errorMessage = "Không thể tải danh sách Sách.";
@@ -125,7 +124,6 @@ export default {
             if (confirm.isConfirmed) {
                 try {
                     const res = await SachService.delete(id);
-                    // nếu response có message, dùng nó
                     const message = res?.data?.message || res?.message || "Xóa thành công";
                     this.sachList = this.sachList.filter((s) => s._id !== id);
                     Swal.fire("Thành công", message, "success");
@@ -138,10 +136,7 @@ export default {
         },
 
         onSearch() {
-            // hiện tại chỉ log; nếu muốn tìm server-side, gọi API ở đây
             console.log("Tìm kiếm:", this.searchKeyword);
-            // ví dụ: nếu muốn server-side search, gọi SachService.search(this.searchKeyword)
-            // và cập nhật this.sachList = result
         },
     },
     mounted() {
@@ -151,37 +146,30 @@ export default {
 </script>
 
 <style scoped>
-/* Định nghĩa chiều rộng cột Bìa Sách */
 .sach-table .cover-col {
     width: 80px;
     text-align: center;
     padding: 8px 5px;
 }
 
-/* Wrapper để căn giữa và định dạng kích thước bìa sách (tỉ lệ 2:3) */
 .list-cover-wrapper {
     width: 50px;
-    /* Chiều rộng cố định */
     height: 75px;
-    /* Chiều cao 1.5 lần chiều rộng */
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    /* Căn giữa trong ô bảng */
     border: 1px solid #ddd;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Style cho ảnh thực tế */
 .list-cover-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Style cho Placeholder mặc định */
 .list-cover-default {
     width: 100%;
     height: 100%;
@@ -195,7 +183,6 @@ export default {
     text-align: center;
 }
 
-/* Căn chỉnh lại các cột trong bảng */
 .sach-table th,
 .sach-table td {
     vertical-align: middle;

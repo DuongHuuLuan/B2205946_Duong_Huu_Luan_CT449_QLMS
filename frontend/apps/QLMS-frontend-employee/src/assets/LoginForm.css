@@ -14,7 +14,6 @@
     overflow: hidden;
 }
 
-/* Card login & register */
 .login-card,
 .register-card {
     background: #fff;
@@ -32,27 +31,23 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* Tiêu đề */
 .login-card .card-title,
 .register-card .card-title {
     font-size: 1.6rem;
     color: #2563eb;
 }
 
-/* Input group */
 .input-group-text {
     background-color: #f3f4f6;
     border: 1px solid #e5e7eb;
 }
 
-/* Input */
 .form-control {
     border-radius: 8px;
     padding: 10px 12px;
     font-size: 0.95rem;
 }
 
-/* Nút */
 .btn-primary {
     background-color: #2563eb;
     border: none;
