@@ -1,4 +1,3 @@
-// src/routes/nhaxuatban.route.js
 const express = require("express");
 const nxb = require("../controllers/nhaxuatban.controller");
 const verifyToken = require("../middlewares/authJwt");

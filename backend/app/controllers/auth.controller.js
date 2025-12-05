@@ -4,7 +4,6 @@ const MongoDB = require("../utils/mongodb.util");
 const NhanVienService = require("../services/nhanvien.service");
 const ApiError = require("../api-error");
 
-// Secret key JWT (nên để vào .env)
 const JWT_SECRET = process.env.JWT_SECRET || "secret123";
 
 exports.register = async (req, res, next) => {

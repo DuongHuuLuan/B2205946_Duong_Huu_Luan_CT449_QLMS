@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const ApiError = require("../api-error");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret123";
-// middlewware xác thực token
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>

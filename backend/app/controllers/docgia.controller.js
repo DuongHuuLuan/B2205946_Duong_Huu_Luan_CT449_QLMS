@@ -21,7 +21,6 @@ const createDocGia = async (req, res, next, withFile = false) => {
       payload.Avatar = req.file.path;
     }
 
-    // Kiểm tra xem MaDocGia đã tồn tại chưa
     const existingDoc = await docGiaService.findOne({
       MaDocGia: payload.MaDocGia,
     });
@@ -31,10 +30,8 @@ const createDocGia = async (req, res, next, withFile = false) => {
 
     const document = await docGiaService.create(payload);
 
-    // Kiểm tra nếu insert thành công
     if (document.acknowledged && document.insertedId) {
       const newDoc = await docGiaService.findById(document.insertedId);
-      // Trả về profile không có mật khẩu
       const { Password, ...docWithoutPassword } = newDoc;
       res.send(docWithoutPassword);
     } else {
@@ -47,13 +44,10 @@ const createDocGia = async (req, res, next, withFile = false) => {
 };
 
 exports.create = async (req, res, next) => {
-  // Nếu không có file (request gửi application/json)
   return createDocGia(req, res, next, false);
 };
 
-// Hàm tạo độc giả với Multer (cho route POST /with-avatar)
 exports.createWithAvatar = async (req, res, next) => {
-  // Multer đã chạy, req.file có thể có hoặc không
   return createDocGia(req, res, next, true);
 };
 
@@ -118,13 +112,10 @@ exports.update = async (req, res, next) => {
 
     let payload = { ...req.body };
 
-    // Trong createDocGia, update, updateProfile...
     if (req.file) {
-      // Chuẩn hóa đường dẫn: luôn bắt đầu bằng /uploads/...
       payload.Avatar = `/uploads/docgia/${req.file.filename}`;
     }
 
-    // Thực hiện cập nhật (service sẽ xử lý id hoặc MaDocGia)
     const updated = await docGiaService.update(req.params.id, payload);
 
     console.log(">> update result:", updated);
@@ -144,24 +135,19 @@ exports.update = async (req, res, next) => {
         return next(new ApiError(404, "Không tìm thấy Độc giả"));
       }
 
-      // existing tồn tại -> kiểm tra xem payload có thực sự tạo khác biệt không
       const checkPayload = { ...req.body };
-      // loại bỏ các field không cho phép so sánh (ví dụ MaDocGia)
       delete checkPayload.MaDocGia;
       delete checkPayload.Password; // password thường bị xử lý riêng, bỏ qua khi so sánh
 
-      // Thêm trường Avatar (nếu có) để so sánh (đã được gán từ req.file.path nếu có file)
       if (payload.Avatar) {
         checkPayload.Avatar = payload.Avatar;
       }
 
-      // so sánh từng field trong payload với existing
       let hasDiff = false;
       for (const k of Object.keys(checkPayload)) {
         const newVal = checkPayload[k];
         const oldVal = existing[k];
 
-        // chuẩn hoá ngày (nếu là string YYYY-MM-DD)
         const normalize = (v) => {
           if (v === undefined || v === null) return "";
           if (typeof v === "string") return v.trim();
@@ -262,52 +248,49 @@ exports.updateProfile = async (req, res, next) => {
       );
     }
 
-    let payload = { ...req.body }; // Loại bỏ các trường không được phép cập nhật
+    let payload = { ...req.body };
     delete payload.Password;
     delete payload.MatKhau;
-    delete payload.MaDocGia; // Chuẩn hoá NgaySinh
+    delete payload.MaDocGia;
 
     if (payload.NgaySinh && typeof payload.NgaySinh === "string") {
       const d = new Date(payload.NgaySinh);
       if (!isNaN(d.getTime())) payload.NgaySinh = d;
-    } // Xử lý Avatar (nếu có file)
+    }
 
     if (req.file) {
       payload.Avatar = req.file.path;
       console.log("Avatar path added:", payload.Avatar);
-    } // XỬ LÝ TRƯỜNG HỢP KHÔNG CÓ DỮ LIỆU CẬP NHẬT
+    }
 
     if (!Object.keys(payload).length) {
-      // Trích xuất profile không có mật khẩu từ existingDoc
       const { Password, MatKhau, password, matkhau, ...userWithoutPassword } =
         existingDoc;
       return res.status(200).send({
         message: "Không có dữ liệu cập nhật.",
         profile: userWithoutPassword,
       });
-    } // THỰC HIỆN CẬP NHẬT
+    }
 
     const result = await docGiaColl.findOneAndUpdate(
       { MaDocGia: maDocGia },
       { $set: payload },
       { returnDocument: "after" }
-    ); // XỬ LÝ TRƯỜNG HỢP KHÔNG CÓ THAY ĐỔI TRÊN DB (findOneAndUpdate trả về null/không có value)
+    );
 
     if (!result.value) {
-      // Sử dụng existingDoc để trả về profile thành công
       const { Password, MatKhau, password, matkhau, ...userWithoutPassword } =
         existingDoc;
       return res.status(200).send({
         message: "Cập nhật thành công.",
         profile: userWithoutPassword,
       });
-    } // XỬ LÝ THÀNH CÔNG VÀ CÓ THAY ĐỔI
-
+    }
     const { Password, MatKhau, password, matkhau, ...userWithoutPassword } =
       result.value;
     return res.send({
       message: "Cập nhật thông tin thành công",
-      profile: userWithoutPassword, // Đảm bảo trả về profile
+      profile: userWithoutPassword,
     });
   } catch (error) {
     console.error("updateProfile ERROR:", error);
@@ -320,14 +303,12 @@ exports.updateProfile = async (req, res, next) => {
   }
 };
 
-// sửa getBorrowStats — trả về số sách (camelCase) để frontend dễ dùng
 exports.getBorrowStats = async (req, res, next) => {
   try {
     const db = MongoDB.client.db();
     const muonColl = db.collection("theodoimuonsach");
     const ma = req.user.MaDocGia;
 
-    // lấy tất cả phiếu mượn (để tính số sách), chỉ phiếu liên quan MaDocGia
     const docs = await muonColl.find({ MaDocGia: ma }).toArray();
 
     let currentBorrowed = 0; // số sách đang mượn
@@ -344,7 +325,6 @@ exports.getBorrowStats = async (req, res, next) => {
       );
       totalBorrowed += numBooks;
 
-      // Xác định "đang mượn": khi NgayTra === null/không tồn tại OR TrangThai === 'Đang mượn'
       const isStillBorrowed =
         d.NgayTra == null ||
         d.NgayTra === undefined ||
@@ -353,7 +333,6 @@ exports.getBorrowStats = async (req, res, next) => {
         currentBorrowed += numBooks;
       }
 
-      // dùng trường HanTra (tên chuẩn) để so sánh quá hạn
       const hanTra = d.HanTra ? new Date(d.HanTra) : null;
       if (hanTra && hanTra < today && isStillBorrowed) {
         overdueCount += numBooks;

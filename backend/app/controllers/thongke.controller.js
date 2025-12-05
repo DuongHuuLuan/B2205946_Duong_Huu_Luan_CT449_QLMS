@@ -42,7 +42,6 @@ exports.getGeneralStats = async (req, res, next) => {
     const totalReaders = await docGiaService.count({});
     const totalBorrows = await theoDoiMuonSachService.count({});
 
-    // Đếm số phiếu mượn đang hoạt động (Đang mượn, Trễ hạn, Chờ duyệt)
     const currentlyBorrowed = await theoDoiMuonSachService.count({
       TrangThai: { $in: ["Đang mượn", "Trễ hạn", "Chờ duyệt"] },
     });

@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const path = require("path");
 
-// Thêm nhân viên (chỉ Admin mới có quyền)
 exports.create = async (req, res, next) => {
   if (req.user.ChucVu !== "Admin") {
     return next(new ApiError(403, "Chỉ Admin mới có quyền thêm nhân viên"));
@@ -43,7 +42,6 @@ exports.create = async (req, res, next) => {
       data: document,
     });
   } catch (error) {
-    // Nếu lỗi → xóa file ảnh đã upload (tránh rác)
     if (req.file) {
       const fs = require("fs");
       const path = require("path");
@@ -59,7 +57,6 @@ exports.create = async (req, res, next) => {
     return next(new ApiError(500, `Lỗi khi tạo nhân viên: ${error.message}`));
   }
 };
-// Lấy tất cả (chỉ Admin)
 exports.findAll = async (req, res, next) => {
   if (req.user.ChucVu !== "Admin") {
     return next(
@@ -76,7 +73,6 @@ exports.findAll = async (req, res, next) => {
   }
 };
 
-// Tìm nhân viên theo ID
 exports.findOne = async (req, res, next) => {
   try {
     if (req.user.ChucVu !== "Admin" && req.user.MSNV !== req.params.id) {
@@ -97,7 +93,6 @@ exports.findOne = async (req, res, next) => {
   }
 };
 
-// Cập nhật nhân viên
 exports.update = async (req, res, next) => {
   if (Object.keys(req.body).length === 0 && !req.file) {
     return next(new ApiError(400, "Dữ liệu cập nhật không được trống"));
@@ -119,11 +114,9 @@ exports.update = async (req, res, next) => {
 
     const updateData = { ...req.body };
 
-    // Xử lý avatar mới
     if (req.file) {
       updateData.Avatar = `/uploads/nhanvien/${req.file.filename}`;
 
-      // XÓA ẢNH CŨ nếu có và không phải ảnh mặc định
       if (oldNV.Avatar && oldNV.Avatar.includes("/uploads/nhanvien/")) {
         const oldPath = path.join(
           __dirname,
@@ -139,7 +132,6 @@ exports.update = async (req, res, next) => {
       }
     }
 
-    // Xử lý password mới
     if (updateData.Password) {
       const salt = await bcrypt.genSalt(10);
       updateData.Password = await bcrypt.hash(updateData.Password, salt);
@@ -157,7 +149,6 @@ exports.update = async (req, res, next) => {
   }
 };
 
-// Xóa 1 nhân viên (chỉ Admin)
 exports.delete = async (req, res, next) => {
   if (req.user.ChucVu !== "Admin") {
     return next(new ApiError(403, "Chỉ Admin mới có quyền xóa nhân viên"));
@@ -176,7 +167,6 @@ exports.delete = async (req, res, next) => {
   }
 };
 
-// Xóa tất cả nhân viên (chỉ Admin)
 exports.deleteAll = async (_req, res, next) => {
   if (_req.user.ChucVu !== "Admin") {
     return next(

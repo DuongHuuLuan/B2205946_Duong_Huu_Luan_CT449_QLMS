@@ -15,7 +15,6 @@ exports.register = async (req, res, next) => {
     });
     if (existingUser) return next(new ApiError(400, "Mã độc giả đã tồn tại"));
 
-    // req.body.Password = await bcrypt.hash(req.body.Password, 10);
     const document = await docGiaService.create(req.body);
 
     const { Password, ...userWithoutPassword } = req.body;

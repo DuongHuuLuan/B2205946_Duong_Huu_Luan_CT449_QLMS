@@ -24,13 +24,11 @@ class AuthService {
   async register(payload) {
     const data = this.extractNhanVienData(payload);
 
-    // Kiểm tra nhân viên đã tồn tại chưa
     const exist = await this.NhanVien.findOne({ MSNV: data.MSNV });
     if (exist) {
       throw new Error("MSNV already exists");
     }
 
-    // Mã hóa mật khẩu
     const salt = await bcrypt.genSalt(10);
     data.Password = await bcrypt.hash(data.Password, salt);
 
@@ -47,7 +45,6 @@ class AuthService {
     const valid = await bcrypt.compare(Password, nv.Password);
     if (!valid) throw new Error("Password incorrect");
 
-    // Tạo JWT
     const token = jwt.sign(
       {
         MSNV: nv.MSNV,

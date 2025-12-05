@@ -20,7 +20,6 @@ const verifyToken = (req, res, next) => {
 };
 
 const authorizeRoleDocGia = () => {
-  console.log("MIDDLE");
   return (req, res, next) => {
     console.log(req.user);
     if (!req.user) {

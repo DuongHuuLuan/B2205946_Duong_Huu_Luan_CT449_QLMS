@@ -5,7 +5,6 @@ class NhaXuatBanService {
     this.NXB = client.db().collection("nhaxuatban");
   }
 
-  // Thêm NXB mới
   async create(payload) {
     const doc = {
       MaNXB: payload.MaNXB,
@@ -17,20 +16,16 @@ class NhaXuatBanService {
     return result;
   }
 
-  // Tìm nhiều NXB theo filter
   async find(filter) {
     const cursor = await this.NXB.find(filter);
     return await cursor.toArray();
   }
-
-  // Tìm NXB theo id
   async findById(id) {
     return await this.NXB.findOne({
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     });
   }
 
-  // Cập nhật NXB
   async update(id, payload) {
     const update = {
       $set: {
@@ -48,7 +43,6 @@ class NhaXuatBanService {
     return result;
   }
 
-  // Xóa 1 NXB
   async delete(id) {
     const result = await this.NXB.findOneAndDelete({
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
@@ -56,19 +50,16 @@ class NhaXuatBanService {
     return result;
   }
 
-  // Xóa tất cả NXB
   async deleteAll() {
     const result = await this.NXB.deleteMany({});
     return result.deletedCount;
   }
-  // phương thức cho thống kê
 
   /**
-   * @description Đếm số lượng Nhà Xuất Bản dựa trên bộ lọc
-   * @param {Object} filter - Bộ lọc MongoDB (mặc định là rỗng để đếm tất cả)
+   * @description
+   * @param {Object} filter
    */
   async count(filter = {}) {
-    // Sử dụng phương thức countDocuments() của MongoDB driver
     return await this.NXB.countDocuments(filter);
   }
 }

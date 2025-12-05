@@ -3,8 +3,7 @@ const router = express.Router();
 const docgiaController = require("../controllers/docgia.controller");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs"); // Import fs module
-// Middleware cho từng loại người dùng
+const fs = require("fs");
 const {
   verifyToken: verifyNhanVien,
   authorizeRoleNhanVien,
@@ -14,7 +13,6 @@ const {
   authorizeRoleDocGia,
 } = require("../middlewares/auth.docgia.middleware");
 
-// Cấu hình Multer (giữ nguyên)
 const UPLOAD_DIR = "uploads/docgia/";
 try {
   if (!fs.existsSync(UPLOAD_DIR)) {
@@ -30,8 +28,6 @@ const storage = multer.diskStorage({
     cb(null, UPLOAD_DIR);
   },
   filename: function (req, file, cb) {
-    // Nếu là tạo độc giả mới, req.user chưa có
-    // Dùng MaDocGia trong body (được gửi trước file)
     const maDocGia = req.body.MaDocGia || "unknown";
     cb(
       null,
@@ -42,13 +38,9 @@ const storage = multer.diskStorage({
 
 const uploadAvatar = multer({
   storage: storage,
-  limits: { fileSize: 1024 * 1024 * 2 }, // 2MB
+  limits: { fileSize: 1024 * 1024 * 2 },
 });
-// ------------------------------------------------
 
-// ROUTE CHO NHÂN VIÊN
-
-// 1. POST /api/docgia (Tạo độc giả KHÔNG file - gửi JSON)
 router
   .route("/")
   .get(
@@ -59,7 +51,7 @@ router
   .post(
     verifyNhanVien,
     authorizeRoleNhanVien(["Admin", "QuanLy", "ThuThu"]),
-    docgiaController.create // <-- KHÔNG CÓ MULTER
+    docgiaController.create
   )
   .delete(
     verifyNhanVien,
@@ -67,14 +59,12 @@ router
     docgiaController.deleteAll
   );
 
-// 2. POST /api/docgia/with-avatar (Tạo độc giả CÓ file - gửi FormData)
-// Frontend cần gọi route này khi có file
 router.post(
   "/with-avatar",
   verifyNhanVien,
   authorizeRoleNhanVien(["Admin", "QuanLy", "ThuThu"]),
-  uploadAvatar.single("Avatar"), // <-- CÓ MULTER Ở ĐÂY
-  docgiaController.createWithAvatar // <-- Dùng controller mới
+  uploadAvatar.single("Avatar"),
+  docgiaController.createWithAvatar
 );
 
 router
@@ -87,7 +77,7 @@ router
   .put(
     verifyNhanVien,
     authorizeRoleNhanVien(["Admin", "QuanLy"]),
-    uploadAvatar.single("Avatar"), // <-- THÊM MULTER cho PUT /:id để sửa (nếu có file)
+    uploadAvatar.single("Avatar"),
     docgiaController.update
   )
   .delete(
@@ -96,22 +86,18 @@ router
     docgiaController.delete
   );
 
-// ROUTE CHO ĐỘC GIẢ (Giữ nguyên)
-
-// Xem thông tin cá nhân
 router.get(
   "/profile/me",
   verifyDocGia,
   authorizeRoleDocGia(),
-  docgiaController.getProfile // Chuyển logic vào controller để tránh trùng lặp code
+  docgiaController.getProfile
 );
 
-// Thêm uploadAvatar.single('Avatar') vào trước Controller
 router.put(
   "/profile/update",
   verifyDocGia,
   authorizeRoleDocGia(),
-  uploadAvatar.single("Avatar"), // <-- MULTER ĐƯỢC GẮN Ở ĐÂY
+  uploadAvatar.single("Avatar"),
   docgiaController.updateProfile
 );
 

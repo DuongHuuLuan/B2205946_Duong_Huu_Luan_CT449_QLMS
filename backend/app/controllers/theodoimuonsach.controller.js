@@ -1,4 +1,3 @@
-// controllers/theodoimuonsach.controller.js
 const TheoDoiMuonSachService = require("../services/theodoimuonsach.service");
 const MongoDB = require("../utils/mongodb.util");
 const ApiError = require("../api-error");
@@ -76,35 +75,6 @@ exports.findAll = async (req, res, next) => {
   }
 };
 
-// exports.findOne = async (req, res, next) => {
-//   try {
-//     const tdmsService = new TheoDoiMuonSachService(MongoDB.client);
-//     const documents = await tdmsService.find({
-//       _id: ObjectId.isValid(req.params.id) ? new ObjectId(req.params.id) : null,
-//     });
-//     const document = documents[0];
-
-//     if (!document) {
-//       return next(new ApiError(404, "Không tìm thấy phiếu mượn"));
-//     }
-
-//     document.NgayMuon = document.NgayMuon
-//       ? moment(document.NgayMuon).format("YYYY-MM-DD")
-//       : null;
-//     document.HanTra = document.HanTra
-//       ? moment(document.HanTra).format("YYYY-MM-DD")
-//       : null;
-//     document.NgayTra = document.NgayTra
-//       ? moment(document.NgayTra).format("YYYY-MM-DD")
-//       : null;
-
-//     return res.send(document);
-//   } catch (error) {
-//     return next(
-//       new ApiError(500, `Lỗi khi tìm phiếu mượn id=${req.params.id}`)
-//     );
-//   }
-// };
 exports.findOne = async (req, res, next) => {
   try {
     const tdmsService = new TheoDoiMuonSachService(MongoDB.client);
@@ -114,7 +84,6 @@ exports.findOne = async (req, res, next) => {
       return next(new ApiError(404, "Không tìm thấy phiếu mượn"));
     }
 
-    // TỰ ĐỘNG TÍNH + CẬP NHẬT TIỀN PHẠT (như ở findAll)
     const today = new Date();
     const hanTra = document.HanTra ? new Date(document.HanTra) : null;
     const soCuon = (document.ChiTietMuon || []).reduce(
@@ -150,11 +119,9 @@ exports.findOne = async (req, res, next) => {
       Object.assign(document, updateFields);
     }
 
-    // Đảm bảo có field
     document.TienPhat = document.TienPhat || 0;
     document.TongThanhToan = document.TongThanhToan || document.TongTien || 0;
 
-    // Format ngày
     document.NgayMuon = document.NgayMuon
       ? moment(document.NgayMuon).format("YYYY-MM-DD")
       : null;
@@ -174,31 +141,6 @@ exports.findOne = async (req, res, next) => {
   }
 };
 
-// exports.update = async (req, res, next) => {
-//   if (Object.keys(req.body).length === 0) {
-//     return next(new ApiError(400, "Dữ liệu cập nhật không được trống"));
-//   }
-
-//   try {
-//     const tdmsService = new TheoDoiMuonSachService(MongoDB.client);
-//     const document = await tdmsService.update(req.params.id, req.body);
-
-//     if (!document) {
-//       return next(new ApiError(404, "Không tìm thấy phiếu mượn để cập nhật"));
-//     }
-//     return res.send({
-//       message: "Cập nhật phiếu mượn thành công",
-//       document,
-//     });
-//   } catch (error) {
-//     return next(
-//       new ApiError(
-//         500,
-//         error.message || `Lỗi khi cập nhật phiếu mượn id=${req.params.id}`
-//       )
-//     );
-//   }
-// };
 exports.update = async (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
     return next(new ApiError(400, "Dữ liệu cập nhật không được trống"));
@@ -294,99 +236,6 @@ exports.deleteAll = async (_req, res, next) => {
   }
 };
 
-// exports.findByDocGia = async (req, res, next) => {
-//   try {
-//     const MaDocGia = req.user.MaDocGia;
-//     const db = MongoDB.client.db();
-//     const collection = db.collection("theodoimuonsach");
-
-//     let documents = await collection
-//       .aggregate([
-//         { $match: { MaDocGia: MaDocGia } },
-//         {
-//           $addFields: {
-//             TongTienHienThi: { $ifNull: ["$TongTien", 0] },
-//           },
-//         },
-//         {
-//           $lookup: {
-//             from: "sach",
-//             localField: "ChiTietMuon.MaSach",
-//             foreignField: "MaSach",
-//             as: "SachThongTin",
-//           },
-//         },
-//         { $sort: { NgayMuon: -1 } },
-//       ])
-//       .toArray();
-
-//     const FINE_PER_DAY = 10000;
-//     const today = new Date();
-
-//     for (const doc of documents) {
-//       try {
-//         const hanTra = doc.HanTra ? new Date(doc.HanTra) : null;
-
-//         const numBooks = Array.isArray(doc.ChiTietMuon)
-//           ? doc.ChiTietMuon.reduce((s, it) => s + (it.SoLuong ?? 1), 0)
-//           : 1;
-
-//         const soNgayTre = overdueDays(hanTra, today);
-
-//         const tienPhat =
-//           soNgayTre > 0 ? soNgayTre * FINE_PER_DAY * numBooks : 0;
-//         const tongThanh = (doc.TongTien ?? 0) + tienPhat;
-
-//         const needDbUpdate =
-//           (doc.TienPhat ?? 0) !== tienPhat ||
-//           (doc.TongThanhToan ?? 0) !== tongThanh ||
-//           (doc.TrangThai === "Đang mượn" && soNgayTre > 0);
-
-//         if (needDbUpdate) {
-//           const newStatus = soNgayTre > 0 ? "Trễ hạn" : doc.TrangThai;
-
-//           if (doc.TrangThai !== "Đã trả" && doc.TrangThai !== "Trễ hạn") {
-//             await collection.updateOne(
-//               { _id: doc._id },
-//               {
-//                 $set: {
-//                   TrangThai: newStatus,
-//                   TienPhat: tienPhat,
-//                   TongThanhToan: tongThanh,
-//                 },
-//               }
-//             );
-//             doc.TrangThai = newStatus;
-//           }
-//         } else {
-//           doc.TienPhat = doc.TienPhat ?? 0;
-//           doc.TongThanhToan = doc.TongThanhToan ?? doc.TongTien ?? 0;
-//         }
-
-//         doc.NgayMuon = doc.NgayMuon
-//           ? moment(doc.NgayMuon).format("YYYY-MM-DD")
-//           : null;
-//         doc.HanTra = doc.HanTra
-//           ? moment(doc.HanTra).format("YYYY-MM-DD")
-//           : null;
-//         doc.NgayTra = doc.NgayTra
-//           ? moment(doc.NgayTra).format("YYYY-MM-DD")
-//           : null;
-//       } catch (err) {
-//         console.error("Error processing borrow doc:", doc?._id, err);
-//         doc.TienPhat = doc.TienPhat ?? 0;
-//         doc.TongThanhToan = doc.TongThanhToan ?? doc.TongTien ?? 0;
-//       }
-//     }
-
-//     return res.send(documents);
-//   } catch (error) {
-//     console.error(error);
-//     return next(
-//       new ApiError(500, "Lỗi khi lấy danh sách mượn sách của độc giả")
-//     );
-//   }
-// };
 exports.findByDocGia = async (req, res, next) => {
   try {
     const MaDocGia = req.user.MaDocGia;
@@ -446,11 +295,9 @@ exports.findByDocGia = async (req, res, next) => {
         Object.assign(doc, updateFields);
       }
 
-      // Đảm bảo hiển thị
       doc.TienPhat = doc.TienPhat || 0;
       doc.TongThanhToan = doc.TongThanhToan || doc.TongTien || 0;
 
-      // Format ngày
       doc.NgayMuon = doc.NgayMuon
         ? moment(doc.NgayMuon).format("YYYY-MM-DD")
         : null;
@@ -469,7 +316,6 @@ exports.findByDocGia = async (req, res, next) => {
   }
 };
 
-// Độc giả tự mượn sách
 exports.createByDocGia = async (req, res, next) => {
   try {
     console.log("CONTROLLEr");

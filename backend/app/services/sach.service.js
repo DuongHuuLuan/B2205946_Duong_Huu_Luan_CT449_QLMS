@@ -17,7 +17,6 @@ class SachService {
       TacGia: payload.TacGia,
     };
 
-    // Xóa field undefined
     Object.keys(sach).forEach(
       (key) => sach[key] === undefined && delete sach[key]
     );
@@ -40,20 +39,7 @@ class SachService {
       _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
     });
   }
-  // async update(id, payload) {
-  //   const filter = { _id: ObjectId.isValid(id) ? new ObjectId(id) : null };
-  //   const update = this.extractSachData(payload);
 
-  //   //update trước
-  //   const result = await this.Sach.updateOne(filter, { $set: update });
-
-  //   if (result.matchedCound == 0) {
-  //     return null;
-  //   }
-
-  //   // lấy lại document sau khi update
-  //   return await this.Sach.findOne(filter);
-  // }
   async update(id, payload) {
     const filter = { _id: ObjectId.isValid(id) ? new ObjectId(id) : null };
     const update = this.extractSachData(payload);
@@ -78,20 +64,18 @@ class SachService {
     return result.deletedCount;
   }
 
-  // phương thức cho thống kê
   /**
-   * @description Đếm số lượng tài liệu dựa trên bộ lọc
-   * @param {Object} filter - Bộ lọc MongoDB (ví dụ: {})
+   * @description
+   * @param {Object} filter
    */
   async count(filter = {}) {
     return await this.Sach.countDocuments(filter);
   } /**
-   * @description Thực hiện các thao tác tổng hợp (Aggregation Pipeline)
-   * @param {Array} pipeline - Mảng các giai đoạn (stages) của Aggregation
+   * @description
+   * @param {Array} pipeline
    */
 
   async aggregate(pipeline) {
-    // Sử dụng phương thức aggregate() của MongoDB driver
     const cursor = await this.Sach.aggregate(pipeline);
     return await cursor.toArray();
   }
